@@ -22,6 +22,20 @@ public class Train extends Thread {
         this.targetLocation = firstVillage;
     }
 
-
+    public void run(){
+        if(currentLocation!=null && targetLocation != null){
+            currentLocation.leave();
+            targetLocation.enter(group);
+            group = null;
+        }
+        if(currentLocation == null && targetLocation != null ){
+            targetLocation.enter(group);
+            group = null;
+        }
+        if(currentLocation != null && targetLocation == null){
+            currentLocation.leave();
+            group = null;
+        }
+    }
 
 }
