@@ -1,6 +1,7 @@
 public class Train extends Thread {
 
     private Group group;
+    private CableCar cableCar = null;
     private Village currentLocation;
     private Village targetLocation;
 
@@ -22,20 +23,28 @@ public class Train extends Thread {
         this.targetLocation = firstVillage;
     }
 
-    public void run(){
-        if(currentLocation!=null && targetLocation != null){
-            currentLocation.leave();
-            targetLocation.enter(group);
-            group = null;
+    public void run() {
+        while (!isInterrupted() && group != null) {
+            System.out.println("group in");
+            try {
+                if (currentLocation != null && targetLocation != null) {
+                    currentLocation.leave();
+                    targetLocation.enter(group);
+                    group = null;
+                }
+                if (currentLocation == null && targetLocation != null) {
+                    targetLocation.enter(group);
+                    group = null;
+                }
+                if (currentLocation != null && targetLocation == null) {
+                    currentLocation.leave();
+                    group = null;
+                }
+                sleep(Params.JOURNEY_TIME);
+            } catch (InterruptedException e) {
+                this.interrupt();
+            }
         }
-        if(currentLocation == null && targetLocation != null ){
-            targetLocation.enter(group);
-            group = null;
-        }
-        if(currentLocation != null && targetLocation == null){
-            currentLocation.leave();
-            group = null;
-        }
-    }
 
+    }
 }

@@ -1,6 +1,6 @@
-public class CableCar extends Thread{
+public class CableCar extends Thread {
 
-    private Group group;
+    private Group group = null;
 
     //true: valley false: terminus
     private static boolean location = true;
@@ -8,26 +8,41 @@ public class CableCar extends Thread{
     //empty cablecar go down to pick up group
     public void descends() {
         System.out.println("cable car descends");
-        location = true;
+        setLocation(true);
     }
 
     //empty cablecar go up to pick up group
     public void ascends() {
 
         System.out.println("cable car ascends");
-        location = false;
+        setLocation(false);
     }
 
-    public void depart() {
-        System.out.println("[" + this.group.getId() + "]" + "departs");
+    public synchronized void depart() {
+        if (CableCar.location && !isEmpty()) {
+            System.out.println("[" + this.group.getId() + "]" + "departs");
+            setGroup(null);
+            setLocation(true);
+            notify();
+        }
     }
 
-    public void arrive(Group group) {
+
+    public synchronized void arrive(Group group) {
+        while (!location || !isEmpty()) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
         this.group = group;
+        setLocation(false);
         System.out.println("[" + this.group.getId() + "] " + "enters cable car to go up");
     }
 
-    public void pickup(Group group){
+    public void pickup(Group group) {
         this.group = group;
     }
 
@@ -39,21 +54,19 @@ public class CableCar extends Thread{
         this.group = group;
     }
 
-    public static boolean Location() {
+    public boolean Location() {
         return location;
     }
 
-    public static void setLocation(boolean location) {
-        CableCar.location = location;
+    public void setLocation(boolean location) {
+        this.location = location;
     }
 
-    public boolean isEmpty(){
-        if(this.group == null){
+    public boolean isEmpty() {
+        if (this.group == null) {
             return true;
-        }
-        else{
+        } else {
             return false;
         }
     }
-
 }

@@ -32,7 +32,7 @@ public class Village {
         if (this.group != null) {
             System.out.println("[" + group.getId() + "] leaves village " + index);
             this.group = null;
-            notifyAll();
+            notify();
         } else {
             System.out.println("no group at village " + index);
         }
