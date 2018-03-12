@@ -7,7 +7,7 @@
 public class Producer extends Thread {
 
     // the cable car to which the groups will be sent.
-    private CableCar cableCar;
+    CableCar cableCar;
 
     // create a new producer
     Producer(CableCar cableCar) {
@@ -21,7 +21,7 @@ public class Producer extends Thread {
                 // send a new group to the cable car
                 Group group = Group.getNewGroup();
                 System.out.println("produce new group!!!");
-                cableCar.arrive(group);
+                CableCar.getInstance().arrive(group);
 
                 // wait for the cable car to operate
                 sleep(Params.JOURNEY_TIME + Params.OPERATE_TIME);

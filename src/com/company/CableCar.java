@@ -1,7 +1,15 @@
 public class CableCar extends Thread {
 
-    private Group group = null;
+    private static CableCar instance;
+    private CableCar(){}
+    public static synchronized CableCar getInstance(){
+        if(instance == null){
+            instance = new CableCar();
+        }
+        return instance;
+    }
 
+    private Group group = null;
     //true: valley false: terminus
     private static boolean location = true;
 
@@ -13,7 +21,6 @@ public class CableCar extends Thread {
 
     //empty cablecar go up to pick up group
     public void ascends() {
-
         System.out.println("cable car ascends");
         setLocation(false);
     }
@@ -37,7 +44,7 @@ public class CableCar extends Thread {
             }
 
         }
-        this.group = group;
+        setGroup(group);
         setLocation(false);
         System.out.println("[" + this.group.getId() + "] " + "enters cable car to go up");
     }
@@ -69,4 +76,20 @@ public class CableCar extends Thread {
             return false;
         }
     }
+
+    public Group leaveCableCar() {
+        Group temp = group;
+        System.out.println("[" + group.getId() + "]" + " leaves the cable car");
+        this.group = null;
+        location = false;
+        return temp;
+    }
+
+    public void enterCableCar(Group group) {
+        this.group = group;
+        location = false;
+        System.out.println("[" + group.getId() + "]" + " enters cable car to go down");
+    }
+
+
 }

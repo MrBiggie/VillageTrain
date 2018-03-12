@@ -24,19 +24,26 @@ public class Train extends Thread {
     }
 
     public void run() {
-        while (!isInterrupted() && group != null) {
-            System.out.println("group in");
+        while (!isInterrupted()) {
+//            System.out.println("cableCar inside" + CableCar.getInstance().isEmpty());
             try {
-                if (currentLocation != null && targetLocation != null) {
+                if (currentLocation != null && targetLocation != null && group != null) {
                     currentLocation.leave();
                     targetLocation.enter(group);
                     group = null;
                 }
-                if (currentLocation == null && targetLocation != null) {
+                if (currentLocation == null && targetLocation != null
+                        && !CableCar.getInstance().isEmpty()
+                        && !CableCar.getInstance().Location()) {
+//                    while (CableCar.getInstance().isEmpty() || CableCar.getInstance().Location()) {
+//                        System.out.println("cableCar inside" + CableCar.getInstance().isEmpty());
+//                    }
+                    group = CableCar.getInstance().getGroup();
                     targetLocation.enter(group);
                     group = null;
+
                 }
-                if (currentLocation != null && targetLocation == null) {
+                if (currentLocation != null && targetLocation == null && group != null) {
                     currentLocation.leave();
                     group = null;
                 }

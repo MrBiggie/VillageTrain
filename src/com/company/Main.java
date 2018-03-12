@@ -19,7 +19,6 @@ public class Main {
         int n = Params.VILLAGES;
 
         // generate the cable car
-        CableCar cableCar = new CableCar();
 
         // create an array to hold the villages
         Village[] village = new Village[n];
@@ -30,9 +29,9 @@ public class Main {
         }
 
         // generate the producer, the consumer and the operator
-        Producer producer = new Producer(cableCar);
-        Consumer consumer = new Consumer(cableCar);
-        Operator operator = new Operator(cableCar);
+        Producer producer = new Producer(CableCar.getInstance());
+        Consumer consumer = new Consumer(CableCar.getInstance());
+        Operator operator = new Operator(CableCar.getInstance());
 
         // create an array trains to hold the trains
         Train[] train = new Train[n - 1];
@@ -44,16 +43,29 @@ public class Main {
         }
 
         // generate trains that pick up and deliver to the cable car terminus
-        Train firstTrain = new Train(cableCar, village[0]);
-        Train lastTrain = new Train(village[n - 1], cableCar);
+        Train firstTrain = new Train(CableCar.getInstance(), village[0]);
+        Train lastTrain = new Train(village[n - 1], CableCar.getInstance());
 
         //start up all the components
         producer.start();
+        consumer.start();
+        operator.start();
+        firstTrain.start();
+        lastTrain.start();
 
+        try {
+            producer.join();
+            for (int i = 0; i < n - 1; i++) {
+                train[i].join();
+            }
+            firstTrain.join();
+            lastTrain.join();
+            consumer.join();
+            operator.join();
 
-
-            System.out.println(",,,,"+cableCar.isEmpty());
-
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
 
 
         //regularly check on the status of threads

@@ -6,15 +6,15 @@ public class Operator extends Thread {
         this.cableCar = cableCar;
     }
 
-    public void run(CableCar cableCar) {
+    public void run() {
         while (!isInterrupted()) {
             try {
-                if (cableCar.isEmpty() && cableCar.Location()) {
-                    cableCar.ascends();
+                if (CableCar.getInstance().isEmpty() && CableCar.getInstance().Location()) {
+                    CableCar.getInstance().ascends();
                 }
                 sleep(Params.operateLapse());
-                if (cableCar.isEmpty() && (!cableCar.Location())) {
-                    cableCar.descends();
+                if (CableCar.getInstance().isEmpty() && (!CableCar.getInstance().Location())) {
+                    CableCar.getInstance().descends();
                 }
                 sleep(Params.operateLapse());
             }
